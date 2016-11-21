@@ -22,7 +22,14 @@ class CFile(object):
 
     def __repr__(self):
         s = self._path + " (" + str(len(self.code)) + " LOC):\n"
-        s += "\tContaining " + str(len(self.functions)) + " function definitions:\n"
+        s += "\tContaining " + str(len(self.functions))
+        s += " function definition"
+
+        # the lengths we go to for correct grammar
+        if len(self.functions) > 1:
+            s += "s"
+        
+        s += ":\n"
 
         for f in self.functions:
             s += "\t\t" + f["type"] + " " + f["name"] + "("
@@ -42,7 +49,14 @@ class CFile(object):
         
         for t in types:
             if t in string:
-                return True
+                t_loc = string.find(t)
+                
+                if t_loc > 0 or t_loc + len(t) < len(string):
+                    if string[t_loc-1].isspace() and \
+                       string[t_loc+len(t)].isspace():
+                        return True
+                else:
+                    return True
             
         return False
 
@@ -50,7 +64,12 @@ class CFile(object):
         # params
         params_start = string.find("(")
         params_end = string.find(")")
-        params = string[params_start+1:params_end].split(",")
+        params_list = string[params_start+1:params_end].split(",")
+
+        params = []
+
+        for p in params_list:
+            params.append(p.strip())
         
         split_list = string[:params_start].split(" ")
 
