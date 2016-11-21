@@ -54,6 +54,7 @@ class CFile(object):
         
         split_list = string[:params_start].split(" ")
 
+        name = ""
         return_type_elems = []
 
         for i in range(len(split_list)):
